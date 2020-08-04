@@ -14,7 +14,6 @@ steps:
   - script: |
       cd $(Build.SourcesDirectory)
       python -m aqt tool --outputdir $(Build.BinariesDirectory)/Qt windows tools_mingw 7.3.0-1-202004170606 qt.tools.win32_mingw730
-      [Environment]::SetEnvironmentVariable("Path", ";$(Build.BinariesDirectory)\Qt\Tools\mingw73_32\bin" + $env:Path, "Machine")
     displayName: "Install mingw32"
 
   # 1 Installing Qt with aqtinstall on Windows is a bit different; all available syntax options are on the aqtinstall GitHub page.
