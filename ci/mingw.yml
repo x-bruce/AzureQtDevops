@@ -6,7 +6,6 @@ steps:
   - task: UsePythonVersion@0
     inputs:
       versionSpec: "3.x"
-      HOST: windows
   - script: |
       cd $(Build.SourcesDirectory)
       python -m pip install aqtinstall
@@ -14,7 +13,7 @@ steps:
 
   - script: |
       cd $(Build.SourcesDirectory)
-      python -m aqt tool --outputdir $(Build.BinariesDirectory)/Qt $(HOST) tools_mingw 7.3.0-1-202004170606 qt.tools.win32_mingw730
+      python -m aqt tool --outputdir $(Build.BinariesDirectory)/Qt windows tools_mingw 7.3.0-1-202004170606 qt.tools.win32_mingw730
       [Environment]::SetEnvironmentVariable("Path", ";$(Build.BinariesDirectory)\Qt\Tools\mingw73_32\bin" + $env:Path, "Machine")
     displayName: "Install mingw32"
 
