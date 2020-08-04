@@ -1,0 +1,66 @@
+# macOS-specific:
+steps:
+  - checkout: self
+    # 1 This makes sure all submodules are checked out and downloaded.
+    # By default, the worker does not do this; meaning builds will fail if submodules are compiled in.
+    submodules: true
+
+  # 2 Brew the package manager is available! Using it to install 7-Zip, which aqtinstall needs, and create-dmg,
+  # which is used later to package the compiled app to a redistributable dmg format.
+  - script: brew install p7zip
+    displayName: "Install 7-zip"
+  - script: brew install create-dmg
+    displayName: "Install create-dmg"
+
+  # 3 Make sure Python 3.x is used for all next steps. You can be specific as well;
+  # the available versions are documented in the worker software lists.
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: "3.x"
+
+  # 4 If you need to use a specific Xcode version, here’s how to select it.
+  # The macOS worker has a lot of different versions available.
+  - script: |
+      /bin/bash -c "sudo xcode-select -s /Applications/Xcode_10.app/Contents/Developer"
+    displayName: "Select Xcode 10"
+
+  # 5 Now we’re getting to the Qt specific parts. This installs aqtinstall using pip.
+  - script: |
+      cd $(Build.SourcesDirectory)
+      python -m pip install aqtinstall
+    displayName: "Install aqtinstall"
+
+  # 6 Use aqtinstall to install Qt 5.14.0 to the so-called BinariesDirectory directory.
+  # Also include some Qt modules. Check the aqtinstall docs for available options.
+  - script: |
+      python -m aqt install --outputdir $(Build.BinariesDirectory)/Qt 5.14.0 mac desktop -m qtcore qtgui qtxml qtwidgets
+    displayName: "Install Qt 5.14.0"
+
+  # 7 Use the newly downloaded Qt and run qmake.
+  - script: |
+      cd $(Build.SourcesDirectory)
+      $(Build.BinariesDirectory)/Qt/5.14.0/clang_64/bin/qmake
+    displayName: "Run qmake"
+
+  # 8 Build sources. You can expect the same thing to happen as when you compile locally.
+  - script: |
+      cd $(Build.SourcesDirectory)
+      make
+    displayName: "Build!"
+
+  # 9 This uses ‘create-dmg’ to package the newly built .app into a .dmg.
+  - script: $(Build.SourcesDirectory)/create-dmg.sh
+    displayName: "Building DMG"
+
+  # 10 Copy the built client.dmg to the artifact staging directory.
+  - task: CopyFiles@2
+    inputs:
+      contents: app.dmg
+      targetFolder: $(Build.ArtifactStagingDirectory)
+
+  # 11  Lastly, publish the artifact staging directory to permanent storage so you can retrieve it.
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: $(Build.ArtifactStagingDirectory)
+      artifactName: MacOS_release
+  # When the pipeline runs successfully, the artifacts (dmg) can be found attached to the job:

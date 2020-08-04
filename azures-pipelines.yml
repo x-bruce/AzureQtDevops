@@ -1,0 +1,28 @@
+jobs:
+- job: MacOS
+  strategy:
+    matrix:
+      mac:
+        imageName: 'macOS-10.14'
+  pool:
+    vmImage: $(imageName)
+  steps:
+    - template: ci/macos.yml
+- job: Windows
+  strategy:
+    matrix:
+      windows:
+        imageName: 'vs2017-win2016'
+  pool:
+    vmImage: $(imageName)
+  steps:
+    - template: ci/windows.yml
+- job: Linux
+  strategy:
+    matrix:
+      mac:
+        imageName: 'ubuntu-18.04'
+  pool:
+    vmImage: $(imageName)
+  steps:
+    - template: ci/linux.yml
