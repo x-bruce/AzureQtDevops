@@ -9,6 +9,13 @@ steps:
       cd $(Build.SourcesDirectory)
       python -m pip install aqtinstall
     displayName: "Install aqtinstall"
+
+  - script: |
+      cd $(Build.SourcesDirectory)
+      python -m aqt tool --outputdir $(Build.BinariesDirectory)/Qt $(HOST) tools_mingw 7.3.0-1-202004170606 qt.tools.win32_mingw730
+      [Environment]::SetEnvironmentVariable("Path", ";$(Build.BinariesDirectory)\Qt\Tools\mingw73_32\bin" + $env:Path, "Machine")
+    displayName: "Install mingw32"
+
   # 1 Installing Qt with aqtinstall on Windows is a bit different; all available syntax options are on the aqtinstall GitHub page.
   - script: |
       cd $(Build.SourcesDirectory)
@@ -18,14 +25,14 @@ steps:
   # Then use the newly installed Qt version to run qmake on the project.
   - script: |
       cd $(Build.SourcesDirectory)
-      call "$(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw73_32\\bin\\qtenv2.bat"
+      call "$(Build.BinariesDirectory)\\Qt\\Tools\\mingw73_32\\bin\\qtenv2.bat"
       qmake
     displayName: "Run qmake"
 
   # 3 Build the application!
   - script: |
       cd $(Build.SourcesDirectory)
-      call "$(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw73_32\\bin\\qtenv2.bat"
+      call "$(Build.BinariesDirectory)\\Qt\\Tools\\mingw73_32\\bin\\qtenv2.bat"
       mingw32-make
     displayName: "Build!"
 

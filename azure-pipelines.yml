@@ -11,15 +11,15 @@ jobs:
   #     vmImage: $(imageName)
   #   steps:
   #     - template: ci/macos.yml
-  - job: Windows
-    strategy:
-      matrix:
-        windows:
-          imageName: "vs2017-win2016"
-    pool:
-      vmImage: $(imageName)
-    steps:
-      - template: ci/windows.yml
+  # - job: Windows
+  #   strategy:
+  #     matrix:
+  #       windows:
+  #         imageName: "vs2017-win2016"
+  #   pool:
+  #     vmImage: $(imageName)
+  #   steps:
+  #     - template: ci/windows.yml
   - job: mingw_cxx11
     strategy:
       matrix:
