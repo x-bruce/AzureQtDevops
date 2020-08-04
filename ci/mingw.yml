@@ -27,7 +27,7 @@ steps:
       cd $(Build.SourcesDirectory)
       call "$(Build.BinariesDirectory)\\Qt\\Tools\\mingw730_32\\bin\\qtenv2.bat"
       call "$(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw730_32\\bin\\qtenv2.bat"
-      qmake
+      $(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw73_32\\bin\\qmake.exe
     displayName: "Run qmake"
 
   # 3 Build the application!
@@ -35,7 +35,7 @@ steps:
       cd $(Build.SourcesDirectory)
       call "$(Build.BinariesDirectory)\\Qt\\Tools\\mingw730_32\\bin\\qtenv2.bat"
       call "$(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw730_32\\bin\\qtenv2.bat"
-      mingw32-make
+      $(Build.BinariesDirectory)\\Qt\\Tools\\mingw730_32\\bin\\mingw32-make.exe
     displayName: "Build!"
 
   # 4 Same thing as in the MacOS pipeline; copy the compiled executable to the artifacts staging directory,
