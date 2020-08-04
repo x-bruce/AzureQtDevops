@@ -20,6 +20,15 @@ jobs:
       vmImage: $(imageName)
     steps:
       - template: ci/windows.yml
+  - job: mingw_cxx11
+    strategy:
+      matrix:
+        windows:
+          imageName: "windows-2019"
+    pool:
+      vmImage: $(imageName)
+    steps:
+      - template: ci/mingw.yml
   # - job: Linux
   #   strategy:
   #     matrix:

@@ -1,0 +1,42 @@
+# Windows-specific:
+steps:
+  - checkout: self
+    submodules: true
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: "3.x"
+  - script: |
+      cd $(Build.SourcesDirectory)
+      python -m pip install aqtinstall
+    displayName: "Install aqtinstall"
+  # 1 Installing Qt with aqtinstall on Windows is a bit different; all available syntax options are on the aqtinstall GitHub page.
+  - script: |
+      cd $(Build.SourcesDirectory)
+      python -m aqt install --outputdir $(Build.BinariesDirectory)\\Qt 5.12.3 windows desktop win32_mingw73 -m qtcore qtgui qtxml qtwidgets
+    displayName: "Install Qt 5.12.3"
+  # 2 First, set the right environment variables using the vcvars64.bat script, in order to make sure Visual Studio 2017 is used.
+  # Then use the newly installed Qt version to run qmake on the project.
+  - script: |
+      cd $(Build.SourcesDirectory)
+      call $(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw73_32\\bin\\qtenv2.bat
+      $(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw73_32\\bin\\qmake.exe
+    displayName: "Run qmake"
+
+  # 3 Build the application!
+  - script: |
+      cd $(Build.SourcesDirectory)
+      call $(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw73_32\\bin\\qtenv2.bat
+      mingw32-make
+    displayName: "Build!"
+
+  # 4 Same thing as in the MacOS pipeline; copy the compiled executable to the artifacts staging directory,
+  # and then publish the artifacts staging directory so you can get it.
+  - task: CopyFiles@2
+    inputs:
+      contents: |
+        $(Build.SourcesDirectory)\\release\\addressbook.exe
+      targetFolder: $(Build.ArtifactStagingDirectory)
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: $(Build.ArtifactStagingDirectory)
+      artifactName: mingw32_release
