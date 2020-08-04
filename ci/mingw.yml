@@ -13,7 +13,7 @@ steps:
 
   - script: |
       cd $(Build.SourcesDirectory)
-      python -m aqt tool --outputdir $(Build.BinariesDirectory)/Qt windows tools_mingw 7.3.0-1-202004170606 qt.tools.win32_mingw730
+      python -m aqt tool --outputdir $(Build.BinariesDirectory)\\Qt windows tools_mingw 7.3.0-1-202004170606 qt.tools.win32_mingw730
     displayName: "Install mingw32"
 
   # 1 Installing Qt with aqtinstall on Windows is a bit different; all available syntax options are on the aqtinstall GitHub page.
@@ -26,6 +26,7 @@ steps:
   - script: |
       cd $(Build.SourcesDirectory)
       call "$(Build.BinariesDirectory)\\Qt\\Tools\\mingw730_32\\bin\\qtenv2.bat"
+      call "$(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw730_32\\bin\\qtenv2.bat"
       qmake
     displayName: "Run qmake"
 
@@ -33,6 +34,7 @@ steps:
   - script: |
       cd $(Build.SourcesDirectory)
       call "$(Build.BinariesDirectory)\\Qt\\Tools\\mingw730_32\\bin\\qtenv2.bat"
+      call "$(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw730_32\\bin\\qtenv2.bat"
       mingw32-make
     displayName: "Build!"
 
