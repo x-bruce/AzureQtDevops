@@ -12,7 +12,7 @@ steps:
   # 1 Installing Qt with aqtinstall on Windows is a bit different; all available syntax options are on the aqtinstall GitHub page.
   - script: |
       cd $(Build.SourcesDirectory)
-      python -m aqt install --outputdir $(Build.BinariesDirectory)\\Qt 5.14.0 windows desktop win64_msvc2017_64 -m qtcore qtgui qtxml qtwidgets
+      python -m aqt install --outputdir $(Build.BinariesDirectory)\\Qt 5.14.0 windows desktop win32_msvc2017 -m qtcore qtgui qtxml qtwidgets
     displayName: "Install Qt 5.14.0"
   # 2 First, set the right environment variables using the vcvars64.bat script, in order to make sure Visual Studio 2017 is used.
   # Then use the newly installed Qt version to run qmake on the project.
