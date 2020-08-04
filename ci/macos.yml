@@ -30,16 +30,16 @@ steps:
       python -m pip install aqtinstall
     displayName: "Install aqtinstall"
 
-  # 6 Use aqtinstall to install Qt 5.14.0 to the so-called BinariesDirectory directory.
+  # 6 Use aqtinstall to install Qt 5.12.3 to the so-called BinariesDirectory directory.
   # Also include some Qt modules. Check the aqtinstall docs for available options.
   - script: |
-      python -m aqt install --outputdir $(Build.BinariesDirectory)/Qt 5.14.0 mac desktop -m qtcore qtgui qtxml qtwidgets
-    displayName: "Install Qt 5.14.0"
+      python -m aqt install --outputdir $(Build.BinariesDirectory)/Qt 5.12.3 mac desktop -m qtcore qtgui qtxml qtwidgets
+    displayName: "Install Qt 5.12.3"
 
   # 7 Use the newly downloaded Qt and run qmake.
   - script: |
       cd $(Build.SourcesDirectory)
-      $(Build.BinariesDirectory)/Qt/5.14.0/clang_64/bin/qmake
+      $(Build.BinariesDirectory)/Qt/5.12.3/clang_64/bin/qmake
     displayName: "Run qmake"
 
   # 8 Build sources. You can expect the same thing to happen as when you compile locally.
