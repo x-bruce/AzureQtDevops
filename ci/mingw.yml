@@ -25,7 +25,6 @@ steps:
   # Then use the newly installed Qt version to run qmake on the project.
   - script: |
       cd $(Build.SourcesDirectory)
-      call "$(Build.BinariesDirectory)\\Qt\\Tools\\mingw730_32\\bin\\qtenv2.bat"
       call "$(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw730_32\\bin\\qtenv2.bat"
       $(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw73_32\\bin\\qmake.exe
     displayName: "Run qmake"
@@ -33,7 +32,6 @@ steps:
   # 3 Build the application!
   - script: |
       cd $(Build.SourcesDirectory)
-      call "$(Build.BinariesDirectory)\\Qt\\Tools\\mingw730_32\\bin\\qtenv2.bat"
       call "$(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw730_32\\bin\\qtenv2.bat"
       $(Build.BinariesDirectory)\\Qt\\Tools\\mingw730_32\\bin\\mingw32-make.exe
     displayName: "Build!"
