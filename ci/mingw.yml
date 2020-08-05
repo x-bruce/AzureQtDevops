@@ -6,6 +6,14 @@ steps:
   - task: UsePythonVersion@0
     inputs:
       versionSpec: "3.x"
+
+  - powershell: |
+      choco uninstall mingw
+      choco uninstall mingw32
+      choco uninstall mingw64
+    #condition: and(eq( variables['Agent.OS'], 'Windows_NT'), eq(variables['TOOLCHAIN'], 'MINGW'), eq(variables['ARCH'], 'win32_mingw730'))
+    displayName: Uninstall Old mingw
+
   - script: |
       cd $(Build.SourcesDirectory)
       python -m pip install aqtinstall
