@@ -9,8 +9,9 @@ steps:
 
   - powershell: |
       choco uninstall mingw
-    #condition: and(eq( variables['Agent.OS'], 'Windows_NT'), eq(variables['TOOLCHAIN'], 'MINGW'), eq(variables['ARCH'], 'win32_mingw730'))
-    displayName: Uninstall Old mingw
+      choco install mingw --version=7.3.0
+    #condition: and(eq( variables['Agent.OS'], 'Windows_NT'), eq(variables['TOOLCHAIN'], 'MINGW'), eq(variables['ARCH'], 'win64_mingw730'))
+    displayName: Uninstall mingw and install 7.3.0
 
   - script: |
       cd $(Build.SourcesDirectory)
@@ -18,29 +19,29 @@ steps:
     displayName: "Install aqtinstall"
 
   - powershell: |
-      python -m aqt tool --outputdir $(Build.BinariesDirectory)/Qt windows tools_mingw 7.3.0-1-202004170606 qt.tools.win32_mingw730
-      [Environment]::SetEnvironmentVariable("Path", ";$(Build.BinariesDirectory)\Qt\Tools\mingw730_32\bin" + $env:Path, "Machine")
-    #condition: and(eq( variables['Agent.OS'], 'Windows_NT'), eq(variables['TOOLCHAIN'], 'MINGW'), eq(variables['ARCH'], 'win32_mingw730'))
-    displayName: Install Mingw73(win32) from Qt distribution and set PATH
+      python -m aqt tool --outputdir $(Build.BinariesDirectory)/Qt windows tools_mingw 7.3.0-1-202004170606 qt.tools.win64_mingw730
+      [Environment]::SetEnvironmentVariable("Path", ";$(Build.BinariesDirectory)\Qt\Tools\mingw730_64\bin" + $env:Path, "Machine")
+    #condition: and(eq( variables['Agent.OS'], 'Windows_NT'), eq(variables['TOOLCHAIN'], 'MINGW'), eq(variables['ARCH'], 'win64_mingw730'))
+    displayName: Install Mingw73(win64) from Qt distribution and set PATH
 
   # 1 Installing Qt with aqtinstall on Windows is a bit different; all available syntax options are on the aqtinstall GitHub page.
   - script: |
       cd $(Build.SourcesDirectory)
-      python -m aqt install --outputdir $(Build.BinariesDirectory)\\Qt 5.12.3 windows desktop win32_mingw73 -m qtcore qtgui qtxml qtwidgets
+      python -m aqt install --outputdir $(Build.BinariesDirectory)\\Qt 5.12.3 windows desktop win64_mingw73 -m qtcore qtgui qtxml qtwidgets
     displayName: "Install Qt 5.12.3"
   # 2 First, set the right environment variables using the vcvars64.bat script, in order to make sure Visual Studio 2017 is used.
   # Then use the newly installed Qt version to run qmake on the project.
   - script: |
       cd $(Build.SourcesDirectory)
-      call "$(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw730_32\\bin\\qtenv2.bat"
-      $(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw73_32\\bin\\qmake.exe
+      call "$(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw730_64\\bin\\qtenv2.bat"
+      $(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw73_64\\bin\\qmake.exe
     displayName: "Run qmake"
 
   # 3 Build the application!
   - script: |
       cd $(Build.SourcesDirectory)
-      call "$(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw730_32\\bin\\qtenv2.bat"
-      $(Build.BinariesDirectory)\\Qt\\Tools\\mingw730_32\\bin\\mingw32-make.exe
+      call "$(Build.BinariesDirectory)\\Qt\\5.12.3\\mingw730_64\\bin\\qtenv2.bat"
+      $(Build.BinariesDirectory)\\Qt\\Tools\\mingw730_64\\bin\\mingw32-make.exe
     displayName: "Build!"
 
   # 4 Same thing as in the MacOS pipeline; copy the compiled executable to the artifacts staging directory,
@@ -53,4 +54,4 @@ steps:
   - task: PublishBuildArtifacts@1
     inputs:
       pathToPublish: $(Build.ArtifactStagingDirectory)
-      artifactName: mingw32_release
+      artifactName: mingw_release
