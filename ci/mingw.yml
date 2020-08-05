@@ -11,10 +11,11 @@ steps:
       python -m pip install aqtinstall
     displayName: "Install aqtinstall"
 
-  - script: |
-      cd $(Build.SourcesDirectory)
-      python -m aqt tool --outputdir $(Build.BinariesDirectory)\\Qt windows tools_mingw 7.3.0-1-202004170606 qt.tools.win32_mingw730
-    displayName: "Install mingw32"
+  - powershell: |
+      python -m aqt tool --outputdir $(Build.BinariesDirectory)/Qt windows tools_mingw 7.3.0-1-202004170606 qt.tools.win32_mingw730
+      [Environment]::SetEnvironmentVariable("Path", ";$(Build.BinariesDirectory)\Qt\Tools\mingw730_32\bin" + $env:Path, "Machine")
+    condition: and(eq( variables['Agent.OS'], 'Windows_NT'), eq(variables['TOOLCHAIN'], 'MINGW'), eq(variables['ARCH'], 'win32_mingw730'))
+    displayName: Install Mingw73(win32) from Qt distribution and set PATH
 
   # 1 Installing Qt with aqtinstall on Windows is a bit different; all available syntax options are on the aqtinstall GitHub page.
   - script: |
